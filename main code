@@ -1,0 +1,47 @@
+import numpy as np
+import pandas as pd
+import requests
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import r2_score
+
+df = pd.read_csv('/content/drive/MyDrive/Colab Notebooks/Housing Dataset.csv')
+df
+
+from sklearn.preprocessing import LabelEncoder
+
+le = LabelEncoder()
+df["guestroom"] = le.fit_transform(df["guestroom"])
+df["mainroad"] = le.fit_transform(df["mainroad"])
+df["basement"] = le.fit_transform(df["basement"])
+df["hotwaterheating"] = le.fit_transform(df["hotwaterheating"])
+
+df["prefarea"] = le.fit_transform(df["prefarea"])
+
+df["furnishingstatus"] = le.fit_transform(df["furnishingstatus"])
+
+df["airconditioning"] = le.fit_transform(df["airconditioning"])
+df.head(5)
+
+model = LinearRegression()
+
+X = df.drop(['price'],axis=1).values
+y = df['price']
+
+print(X)
+
+X_train, X_test, y_train, y_test = train_test_split(X,y)
+
+model.fit(X_train, y_train)
+
+y_pred = model.predict(X_test)
+
+r2_score(y_test, y_pred)
+
+plt.figure(figsize=(30,10))
+plt.scatter(y_test,y_pred)
+plt.xlabel('Actual')
+plt.ylabel('Predicted')
+plt.title('Actual vs. Predicted')
